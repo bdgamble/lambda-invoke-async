@@ -1,0 +1,39 @@
+{
+  "name": "lambda-invoker",
+  "version": "1.0.0",
+  "description": "asynchronously invoke a lambda function",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha tests",
+    "posttest": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bdgamble/lambda-invoker.git"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "invoke",
+    "async"
+  ],
+  "author": "Bryan Gamble <bryan.d.gamble@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bdgamble/lambda-invoker/issues"
+  },
+  "homepage": "https://github.com/bdgamble/lambda-invoker#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "env-test": "^1.0.0",
+    "eslint": "^3.19.0",
+    "eslint-plugin-mocha": "^4.9.0",
+    "mocha": "^3.2.0",
+    "sinon": "^2.1.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.41.0"
+  }
+}
