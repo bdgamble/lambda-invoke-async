@@ -1,5 +1,7 @@
 # lambda-invoker
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/bdgamble/lambda-invoker.svg)](https://greenkeeper.io/)
+
 Module that allows invoking a lambda function synchronously via the `RequestResponse` invocationType or asynchronously via the `Event` invocationType.
 
 # Usage
