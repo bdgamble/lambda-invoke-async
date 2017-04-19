@@ -7,7 +7,7 @@ Module that allows invoking a lambda function synchronously via the `RequestResp
 ## new Invoker(options)
 Constructor for the class.
 - **options** - { Object, optional } - an object to provide configuration options.
-  - **logger** - { Object/Function, optional } - a valid logger. If no logger is provided, no debug information or errors will be logged.
+  - **logger** - { Object, optional } - a valid logger. If no logger is provided, no debug information or errors will be logged.
 
 ```javascript
 const Invoker = require('lambda-invoker');
