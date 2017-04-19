@@ -1,5 +1,5 @@
 {
-  "name": "lambda-invoker",
+  "name": "aws-lambda-invoker",
   "version": "1.0.0",
   "description": "asynchronously invoke a lambda function",
   "main": "index.js",
