@@ -16,12 +16,12 @@ module.exports = class LambdaInvoker {
     return new Buffer(JSON.stringify(context)).toString('base64');
   }
 
-  _invokeWithType(invocationType, functionName, payload, clientContext, cb) {
+  _invokeWithType(invocationType, options, cb) {
     const logger = this.logger;
     cb = cb || function defaultCB(err, result) {
       return new Promise((resolve, reject) => {
         if (err) {
-          logger && logger.error({ err, functionName }, 'failed to invoke lambda');
+          logger && logger.error({ err, options }, 'failed to invoke lambda');
           err._logged = true;
           reject(err);
           return;
@@ -31,34 +31,32 @@ module.exports = class LambdaInvoker {
       });
     };
 
-    if (!functionName || !payload) {
-      return cb(new Error('functionName and payload are required parameters.'));
+    if (!options.functionName || !options.payload) {
+      return cb(new Error('functionName and payload are required properties of the options parameter.'));
     }
 
     logger && logger.debug({
-      functionName,
-      payload,
-      clientContext,
+      options,
       invocationType
     }, 'trying to invoke lambda');
 
     return this._client
       .invoke({
         InvocationType: invocationType,
-        FunctionName: functionName,
-        Payload: JSON.stringify(payload),
-        ClientContext: this._formatClientContext(clientContext)
+        FunctionName: options.functionName,
+        Payload: JSON.stringify(options.payload),
+        ClientContext: this._formatClientContext(options.clientContext)
       })
       .promise()
       .then(result => cb(null, result))
       .catch(cb);
   }
 
-  invoke(functionName, payload, clientContext, cb) {
-    return this._invokeWithType('RequestResponse', functionName, payload, clientContext, cb);
+  invoke(options, cb) {
+    return this._invokeWithType('RequestResponse', options, cb);
   }
 
-  invokeAsync(functionName, payload, clientContext, cb) {
-    return this._invokeWithType('Event', functionName, payload, clientContext, cb);
+  invokeAsync(options, cb) {
+    return this._invokeWithType('Event', options, cb);
   }
 }

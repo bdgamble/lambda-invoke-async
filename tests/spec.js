@@ -24,10 +24,15 @@ function jsonToBase64(obj) {
   return new Buffer(JSON.stringify(obj)).toString('base64');
 }
 
-describe('lambda-invoke-async', () => {
+describe('aws-lambda-invoker', () => {
   const TEST_FUNCTION_NAME = 'functionName';
   const TEST_PAYLOAD = { data: 'blah' };
   const TEST_CLIENT_CONTEXT = { context: 'some-context' };
+  const TEST_INVOKE_OPTIONS = {
+    functionName: TEST_FUNCTION_NAME,
+    payload: TEST_PAYLOAD,
+    clientContext: TEST_CLIENT_CONTEXT
+  };
 
   describe('constructor', () => {
     it('instantiates the client', () => {
@@ -64,14 +69,14 @@ describe('lambda-invoke-async', () => {
     describe('throws validation error when', () => {
       it('is missing functionName', () => {
         this.invokeMock.never();
-        return expect(invoker.invoke(undefined, undefined, undefined))
-          .to.be.rejectedWith(Error, /functionName and payload are required parameters/);
+        return expect(invoker.invoke({ payload: TEST_PAYLOAD }))
+          .to.be.rejectedWith(Error, /functionName and payload are required properties of the options parameter/);
       });
 
       it('is missing payload', () => {
         this.invokeMock.never();
-        return expect(invoker.invoke(TEST_FUNCTION_NAME, undefined, undefined))
-          .to.be.rejectedWith(Error, /functionName and payload are required parameters/);
+        return expect(invoker.invoke({ functionName: TEST_FUNCTION_NAME }))
+          .to.be.rejectedWith(Error, /functionName and payload are required properties of the options parameter/);
       });
     });
 
@@ -103,7 +108,7 @@ describe('lambda-invoke-async', () => {
               .returns(generateAWSPromise(() => Promise.reject(testError)));
 
             return expect(
-              invoker.invoke(TEST_FUNCTION_NAME, TEST_PAYLOAD, TEST_CLIENT_CONTEXT, test.cb)
+              invoker.invoke(TEST_INVOKE_OPTIONS, test.cb)
             )
             .to.be.rejectedWith(test.expectedError);
           });
@@ -119,7 +124,7 @@ describe('lambda-invoke-async', () => {
             }).returns(generateAWSPromise(testData));
 
             return expect(
-              invoker.invoke(TEST_FUNCTION_NAME, TEST_PAYLOAD, TEST_CLIENT_CONTEXT, test.cb)
+              invoker.invoke(TEST_INVOKE_OPTIONS, test.cb)
             )
             .to.eventually.equal(test.expectedData);
           });
@@ -133,7 +138,7 @@ describe('lambda-invoke-async', () => {
             }).returns(generateAWSPromise(testData));
 
             return expect(
-              invoker.invoke(TEST_FUNCTION_NAME, TEST_PAYLOAD, undefined, test.cb)
+              invoker.invoke({ functionName: TEST_FUNCTION_NAME, payload: TEST_PAYLOAD }, test.cb)
             )
             .to.eventually.equal(test.expectedData);
           });
@@ -165,14 +170,14 @@ describe('lambda-invoke-async', () => {
     describe('throws validation error when', () => {
       it('is missing functionName', () => {
         this.invokeMock.never();
-        return expect(invoker.invokeAsync(undefined, undefined, undefined))
-          .to.be.rejectedWith(Error, /functionName and payload are required parameters/);
+        return expect(invoker.invokeAsync({ payload: TEST_PAYLOAD }))
+          .to.be.rejectedWith(Error, /functionName and payload are required properties of the options parameter/);
       });
 
       it('is missing payload', () => {
         this.invokeMock.never();
-        return expect(invoker.invokeAsync(TEST_FUNCTION_NAME, undefined, undefined))
-          .to.be.rejectedWith(Error, /functionName and payload are required parameters/);
+        return expect(invoker.invokeAsync({ functionName: TEST_FUNCTION_NAME }))
+          .to.be.rejectedWith(Error, /functionName and payload are required properties of the options parameter/);
       });
     });
 
@@ -204,7 +209,7 @@ describe('lambda-invoke-async', () => {
               .returns(generateAWSPromise(() => Promise.reject(testError)));
 
             return expect(
-              invoker.invokeAsync(TEST_FUNCTION_NAME, TEST_PAYLOAD, TEST_CLIENT_CONTEXT, test.cb)
+              invoker.invokeAsync(TEST_INVOKE_OPTIONS, test.cb)
             )
             .to.be.rejectedWith(test.expectedError);
           });
@@ -220,7 +225,7 @@ describe('lambda-invoke-async', () => {
             }).returns(generateAWSPromise(testData));
 
             return expect(
-              invoker.invokeAsync(TEST_FUNCTION_NAME, TEST_PAYLOAD, TEST_CLIENT_CONTEXT, test.cb)
+              invoker.invokeAsync(TEST_INVOKE_OPTIONS, test.cb)
             )
             .to.eventually.equal(test.expectedData);
           });
@@ -234,7 +239,7 @@ describe('lambda-invoke-async', () => {
             }).returns(generateAWSPromise(testData));
 
             return expect(
-              invoker.invokeAsync(TEST_FUNCTION_NAME, TEST_PAYLOAD, undefined, test.cb)
+              invoker.invokeAsync({ functionName: TEST_FUNCTION_NAME, payload: TEST_PAYLOAD }, test.cb)
             )
             .to.eventually.equal(test.expectedData);
           });
