@@ -20,11 +20,12 @@ const invoker = new Invoker();
 const invoker2 = new Invoker({ logger });
 ```
 
-## invoke(functionName, payload, clientContext, cb)
+## invoke(options, cb)
 Method to synchronously invoke a lambda function.
-- **functionName** - { String, required } - the lambda function you wish to invoke.
-- **payload** - { Object, required } - the payload you wish to send to the lambda function.
-- **clientContext** - { Object, base64-encoded } - used to pass client-specific information to the lambda function being invoked via the context variable.
+- **options** - { Object, required } - invoke options for lambda
+  - **functionName** - { String, required } - the lambda function you wish to invoke.
+  - **payload** - { Object, required } - the payload you wish to send to the lambda function.
+  - **clientContext** - { Object, base64-encoded } - used to pass client-specific information to the lambda function being invoked via the context variable.
 - **cb** - { function } - takes params err and result and is called on success or failure of invoking the lambda function. By default returns a promise that rejects on error or resolves with the result from invoking the lambda.
 
 ```javascript
@@ -34,16 +35,21 @@ const invoker = new Invoker();
 
 // lambda handler
 module.exports.handler = function(event, context, cb) {
-  const clientContext = { requestId: context.awsRequestId };
-  invoker.invoke('testFunctionName', { data: 'blah' }, clientContext, cb);
+  const invokeOptions: {
+    functionName: 'testFunctionName',
+    payload: { data: 'blah' },
+    clientContext: { requestId: context.awsRequestId }
+  };
+  invoker.invoke(invokeOptions, cb);
 };
 ```
 
 ## invokeAsync(functionName, payload, clientContext, cb)
 Method to asynchronously invoke a lambda function.
-- **functionName** - { String, required } - the lambda function you wish to invoke.
-- **payload** - { Object, required } - the payload you wish to send to the lambda function.
-- **clientContext** - { Object, base64-encoded } - used to pass client-specific information to the lambda function being invoked via the context variable.
+- **options** - { Object, required } - invoke options for lambda
+  - **functionName** - { String, required } - the lambda function you wish to invoke.
+  - **payload** - { Object, required } - the payload you wish to send to the lambda function.
+  - **clientContext** - { Object, base64-encoded } - used to pass client-specific information to the lambda function being invoked via the context variable.
 - **cb** - { function } - takes params err and result and is called on success or failure of invoking the lambda function. By default returns a promise that rejects on error or resolves with the result from invoking the lambda.
 
 ```javascript
@@ -53,7 +59,11 @@ const invoker = new Invoker();
 
 // lambda handler
 module.exports.handler = function(event, context, cb) {
-  const clientContext = { requestId: context.awsRequestId };
-  invoker.invokeAsync('testFunctionName', { data: 'blah' }, clientContext, cb);
+  const invokeOptions: {
+    functionName: 'testFunctionName',
+    payload: { data: 'blah' },
+    clientContext: { requestId: context.awsRequestId }
+  };
+  invoker.invokeAsync(invokeOptions, cb);
 };
 ```
