@@ -5,7 +5,7 @@ const AWS = require('aws-sdk');
 module.exports = class LambdaInvoker {
   constructor(options) {
     options = options || {};
-    this._client = new AWS.Lambda();
+    this._client = options.client || new AWS.Lambda();
     this.logger = options.logger;
   }
 
