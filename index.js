@@ -4,9 +4,10 @@ const AWS = require('aws-sdk');
 
 module.exports = class LambdaInvoker {
   constructor(options) {
-    options = options || {};
+    options = options || { compressPayload: false };
     this._client = options.client || new AWS.Lambda();
     this.logger = options.logger;
+    this.options = options;
   }
 
   _formatClientContext(context) {
@@ -40,11 +41,14 @@ module.exports = class LambdaInvoker {
       invocationType
     }, 'trying to invoke lambda');
 
+    const payload = this.options.compressPayload
+      ? JSON.stringify(options.payload, null, 0)
+      : JSON.stringify(options.payload);
     return this._client
       .invoke({
         InvocationType: invocationType,
         FunctionName: options.functionName,
-        Payload: JSON.stringify(options.payload),
+        Payload: payload,
         ClientContext: this._formatClientContext(options.clientContext)
       })
       .promise()
