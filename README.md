@@ -7,7 +7,9 @@ Module that allows invoking a lambda function synchronously via the `RequestResp
 ## new Invoker(options)
 Constructor for the class.
 - **options** - { Object, optional } - an object to provide configuration options.
+  - **client** - { Object, optional } - a valid lambda client. If no client is provided, the default lambda client will be used.
   - **logger** - { Object, optional } - a valid logger. If no logger is provided, no debug information or errors will be logged.
+  - **compressPayload** - { boolean, optional } - whether the payload should be compressed to remove whitespace when being stringified. Defaults to false.
 
 ```javascript
 const Invoker = require('lambda-invoker');
